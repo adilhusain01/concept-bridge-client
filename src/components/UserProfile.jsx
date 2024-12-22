@@ -27,7 +27,7 @@ const UserProfile = () => {
       if (account) {
         try {
           const response = await fetch(
-            `${import.meta.process.env.VITE_SERVER_URI}/api/user/check-user`,
+            `${import.meta.env.VITE_SERVER_URI}/api/user/check-user`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -51,9 +51,7 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          `${
-            import.meta.process.env.VITE_SERVER_URI
-          }/api/user/profile/${account}`
+          `${import.meta.env.VITE_SERVER_URI}/api/user/profile/${account}`
         );
         const data = await response.json();
         setUserData(data);
@@ -66,7 +64,7 @@ const UserProfile = () => {
       try {
         const response = await fetch(
           `${
-            import.meta.process.env.VITE_SERVER_URI
+            import.meta.env.VITE_SERVER_URI
           }/api/user/activity/${account}/${currentMonth}/${currentYear}`
         );
         const data = await response.json();

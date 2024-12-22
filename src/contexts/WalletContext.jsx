@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 const WalletContext = createContext();
 
 const EDUCHAIN_NETWORK = {
-  chainId: "0xA045C",
+  chainId: "0xa045c",
   chainName: "EDU Chain Testnet",
   nativeCurrency: {
     name: "EDU",

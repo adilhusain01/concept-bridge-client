@@ -1,10 +1,13 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./components/Home";
-import MindMap from "./components/MindMap";
 import Navbar from "./components/Navbar";
 import { WalletProvider } from "./contexts/WalletContext";
-import UserProfile from "./components/UserProfile";
+import Loader from "./components/Loader";
+
+// Lazy load components
+const Home = lazy(() => import("./components/Home"));
+const MindMap = lazy(() => import("./components/MindMap"));
+const UserProfile = lazy(() => import("./components/UserProfile"));
 
 export default function App() {
   return (
@@ -12,12 +15,13 @@ export default function App() {
       <Router>
         <Navbar />
         <div className="pt-16">
-          {/* Add padding to avoid content being hidden behind the fixed navbar */}
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/mindmap" element={<MindMap />} />
-            <Route path="/profile" element={<UserProfile />} />
-          </Routes>
+          <Suspense fallback={<Loader />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/mindmap" element={<MindMap />} />
+              <Route path="/profile" element={<UserProfile />} />
+            </Routes>
+          </Suspense>
         </div>
       </Router>
     </WalletProvider>

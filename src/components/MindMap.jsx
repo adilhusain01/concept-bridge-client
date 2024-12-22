@@ -21,6 +21,7 @@ const MindMap = () => {
   const [topic, setTopic] = useState("");
   const [mermaidCode, setMermaidCode] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isLoadingContent, setIsLoadingContent] = useState(false);
   const [explanations, setExplanations] = useState([]);
   const [isRegistered, setIsRegistered] = useState(false);
   const { account, isCorrectNetwork } = useWallet();
@@ -180,6 +181,7 @@ const MindMap = () => {
   }, [mermaidCode, topic, clickedNodes]);
 
   const handleSelectTopic = async (selectedTopic) => {
+    setIsLoadingContent(true);
     try {
       const response = await fetch(
         `${
@@ -193,15 +195,11 @@ const MindMap = () => {
     } catch (error) {
       console.error("Error fetching mindmap:", error);
     }
+    setIsLoadingContent(false);
   };
 
-  // const handleRegistrationComplete = (userData) => {
-  //   setIsRegistered(true);
-  // };
-
-  // Update generateMindmap to include wallet address
   const generateMindmap = async () => {
-    setLoading(true);
+    setIsLoadingContent(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SERVER_URI}/api/generate-mindmap`,
@@ -228,7 +226,7 @@ const MindMap = () => {
     } catch (error) {
       console.error("Error:", error);
     }
-    setLoading(false);
+    setIsLoadingContent(false);
   };
 
   const handleNodeClick = async (nodeText, parentContext) => {
@@ -391,7 +389,13 @@ const MindMap = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col rounded-xl bg-white/20 backdrop-blur-lg border border-white/30 shadow-xl">
         <div className="flex-1 overflow-auto p-6 relative custom-scrollbar">
-          <div id="diagram-container" className="w-full min-h-[600px]" />
+          {isLoadingContent ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="w-8 h-8 animate-spin" />
+            </div>
+          ) : (
+            <div id="diagram-container" className="w-full min-h-[600px]" />
+          )}
           <div className="absolute top-6 right-6 flex gap-2">
             {mermaidCode && (
               <Button

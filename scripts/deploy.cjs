@@ -1,24 +1,25 @@
-const hre = require('hardhat');
+const hre = require("hardhat");
 
 async function main() {
   try {
     // Get the contract factory
-    const SmartSavingsPot = await hre.ethers.getContractFactory(
-      'SmartSavingsPot'
-    );
+    const EDUToken = await hre.ethers.getContractFactory("EDUToken");
 
-    // Deploy the contract
-    console.log('Deploying SmartSavingsPot contract...');
-    const smartSavingsPot = await SmartSavingsPot.deploy();
+    // Define the initial supply
+    const initialSupply = hre.ethers.utils.parseUnits("0.02", 18); // Example: 1000 tokens
+
+    // Deploy the contract with the initial supply
+    console.log("Deploying EDUToken contract...");
+    const eDUToken = await EDUToken.deploy(initialSupply);
 
     // Wait for deployment to finish
-    // await smartSavingsPot.waitForDeployment();
-    const contractAddress = await smartSavingsPot.address;
+    await eDUToken.deployed();
+    const contractAddress = eDUToken.address;
 
-    console.log('SmartSavingsPot contract deployed to:', contractAddress);
-    console.log('Save this address for interaction script!');
+    console.log("EDUToken contract deployed to:", contractAddress);
+    console.log("Save this address for interaction script!");
   } catch (error) {
-    console.error('Error during deployment:', error);
+    console.error("Error during deployment:", error);
     process.exit(1);
   }
 }

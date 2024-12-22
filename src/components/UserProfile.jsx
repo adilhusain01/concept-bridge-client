@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { User, Activity, Clock, Wallet } from "lucide-react";
+import { User, Activity, Clock, Wallet, Gift } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useWallet } from "../contexts/WalletContext";
 import UserRegistration from "./UserRegistration";
 import Loader from "./Loader";
+import { useContract } from "../contexts/ContractContext";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -13,6 +15,14 @@ const UserProfile = () => {
   const { account, isCorrectNetwork } = useWallet();
   const [isRegistered, setIsRegistered] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [streakStatus, setStreakStatus] = useState({
+    isEligible: false,
+    nextEligibleDate: null,
+    currentStreak: 0,
+    isLoading: false,
+  });
+
+  const { claimReward } = useContract();
 
   useEffect(() => {
     const checkUserRegistration = async () => {
@@ -72,6 +82,61 @@ const UserProfile = () => {
     }
   }, [account, currentMonth, currentYear, isRegistered]);
 
+  useEffect(() => {
+    const checkStreakEligibility = async () => {
+      if (account && isRegistered) {
+        try {
+          const response = await fetch(
+            `${import.meta.env.VITE_SERVER_URI}/api/streak/check/${account}`
+          );
+          const data = await response.json();
+          setStreakStatus((prev) => ({
+            ...prev,
+            isEligible: data.isEligible,
+            nextEligibleDate: data.nextEligibleDate,
+            currentStreak: data.currentStreak,
+          }));
+        } catch (error) {
+          console.error("Error checking streak eligibility:", error);
+        }
+      }
+    };
+
+    checkStreakEligibility();
+  }, [account, isRegistered]);
+
+  const handleClaimReward = async () => {
+    setStreakStatus((prev) => ({ ...prev, isLoading: true }));
+    try {
+      // Call smart contract to distribute reward
+      const txHash = await claimReward();
+
+      // Record the claim in backend
+      await fetch(
+        `${import.meta.env.VITE_SERVER_URI}/api/streak/record-claim`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            walletAddress: account,
+            transactionHash: txHash,
+          }),
+        }
+      );
+
+      // Update UI state
+      setStreakStatus((prev) => ({
+        ...prev,
+        isEligible: false,
+        nextEligibleDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+      }));
+    } catch (error) {
+      console.error("Error claiming reward:", error);
+    } finally {
+      setStreakStatus((prev) => ({ ...prev, isLoading: false }));
+    }
+  };
+
   const getDaysInMonth = (year, month) => {
     return new Date(year, month, 0).getDate();
   };
@@ -79,7 +144,10 @@ const UserProfile = () => {
   const hasActivity = (day) => {
     return activityData.some((activity) => {
       const date = new Date(activity.date);
-      return date.getDate() === day;
+      return (
+        date.toISOString().split("T")[0].split("-")[2] ===
+        String(day).padStart(2, "0")
+      );
     });
   };
 
@@ -168,8 +236,8 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8">
-      <div className="max-w-7xl mx-auto py-[8rem]">
+    <div className="h-[calc(100vh-70px)] bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8">
+      <div className="max-w-7xl mx-auto py-[5rem]">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* User Info Card */}
           <Card className="bg-white/80 backdrop-blur-sm shadow-xl h-fit">
@@ -255,6 +323,42 @@ const UserProfile = () => {
               </select>
             </CardHeader>
             <CardContent>{renderHeatmap()}</CardContent>
+          </Card>
+          <Card className="bg-white/80 backdrop-blur-sm shadow-xl col-span-full">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Gift className="w-6 h-6 text-yellow-500" />
+                <span>Streak Rewards</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-lg">5-Day Streak Reward</h3>
+                  <p className="text-sm text-gray-600">
+                    Current Streak: {streakStatus.currentStreak} days
+                    {streakStatus.isEligible
+                      ? " - You can claim your reward!"
+                      : streakStatus.nextEligibleDate
+                      ? ` - Next reward available on ${new Date(
+                          streakStatus.nextEligibleDate
+                        ).toLocaleDateString()}`
+                      : " - Complete 5 days of activity to earn EDU tokens!"}
+                  </p>
+                </div>
+                <Button
+                  onClick={handleClaimReward}
+                  disabled={!streakStatus.isEligible || streakStatus.isLoading}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                >
+                  {streakStatus.isLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                  ) : (
+                    "Claim Reward"
+                  )}
+                </Button>
+              </div>
+            </CardContent>
           </Card>
         </div>
       </div>

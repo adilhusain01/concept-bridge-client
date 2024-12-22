@@ -29,9 +29,9 @@ const Home = () => {
               </span>
             </h1>
             <p className="text-xl text-gray-600">
-              Experience a revolutionary way to explore, understand, and connect
-              ideas through AI-powered interactive mind maps with Exciting
-              Rewards.
+              Very Less time for an exam Or want to explore a topic with control
+              in your hands ? Get your hands dirty with our Quick Concept
+              walkthrough solution with additional easy examples.
             </p>
             <div className="flex flex-row gap-4 items-center">
               <Link to="/mindmap">

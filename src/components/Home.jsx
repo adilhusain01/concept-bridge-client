@@ -23,7 +23,7 @@ const Home = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="flex-1 space-y-8">
             <h1 className="text-6xl font-bold text-gray-800 leading-tight">
-              Transform Ideas into
+              Transform Concepts into
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">
                 Visual Knowledge
               </span>

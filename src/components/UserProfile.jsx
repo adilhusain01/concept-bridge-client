@@ -27,7 +27,7 @@ const UserProfile = () => {
       if (account) {
         try {
           const response = await fetch(
-            "http://localhost:5000/api/user/check-user",
+            `${import.meta.process.env.VITE_SERVER_URI}/api/user/check-user`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -51,7 +51,9 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/user/profile/${account}`
+          `${
+            import.meta.process.env.VITE_SERVER_URI
+          }/api/user/profile/${account}`
         );
         const data = await response.json();
         setUserData(data);
@@ -63,7 +65,9 @@ const UserProfile = () => {
     const fetchActivityData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/user/activity/${account}/${currentMonth}/${currentYear}`
+          `${
+            import.meta.process.env.VITE_SERVER_URI
+          }/api/user/activity/${account}/${currentMonth}/${currentYear}`
         );
         const data = await response.json();
         setActivityData(data);

@@ -32,7 +32,7 @@ const MindMap = () => {
       if (account) {
         try {
           const response = await fetch(
-            "http://localhost:5000/api/user/check-user",
+            `${import.meta.process.env.VITE_SERVER_URI}/api/user/check-user`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -57,7 +57,9 @@ const MindMap = () => {
       if (account && isRegistered) {
         try {
           const response = await fetch(
-            `http://localhost:5000/api/user-mindmaps/${account}`
+            `${
+              import.meta.process.env.VITE_SERVER_URI
+            }/api/user-mindmaps/${account}`
           );
           const data = await response.json();
           setUserMindmaps(data);
@@ -75,9 +77,9 @@ const MindMap = () => {
       if (account && topic) {
         try {
           const response = await fetch(
-            `http://localhost:5000/api/clicked-nodes/${account}/${encodeURIComponent(
-              topic
-            )}`
+            `${
+              import.meta.process.env.VITE_SERVER_URI
+            }/api/clicked-nodes/${account}/${encodeURIComponent(topic)}`
           );
           const data = await response.json();
           setClickedNodes(new Set(data.map((node) => node.nodeText)));
@@ -182,9 +184,9 @@ const MindMap = () => {
   const handleSelectTopic = async (selectedTopic) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/mindmap/${account}/${encodeURIComponent(
-          selectedTopic
-        )}`
+        `${
+          import.meta.process.env.VITE_SERVER_URI
+        }/api/mindmap/${account}/${encodeURIComponent(selectedTopic)}`
       );
       const data = await response.json();
       setTopic(selectedTopic);
@@ -204,7 +206,7 @@ const MindMap = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "http://localhost:5000/api/generate-mindmap",
+        `${import.meta.process.env.VITE_SERVER_URI}/api/generate-mindmap`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -234,29 +236,35 @@ const MindMap = () => {
   const handleNodeClick = async (nodeText, parentContext) => {
     try {
       // First, track the click
-      await fetch("http://localhost:5000/api/track-node-click", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          walletAddress: account,
-          topic,
-          nodeText,
-        }),
-      });
+      await fetch(
+        `${import.meta.process.env.VITE_SERVER_URI}/api/track-node-click`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            walletAddress: account,
+            topic,
+            nodeText,
+          }),
+        }
+      );
 
       // Update local state
       setClickedNodes((prev) => new Set([...prev, nodeText]));
 
       // Get node info as before
-      const response = await fetch("http://localhost:5000/api/get-node-info", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nodeText,
-          parentContext,
-          walletAddress: account,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.process.env.VITE_SERVER_URI}/api/get-node-info`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nodeText,
+            parentContext,
+            walletAddress: account,
+          }),
+        }
+      );
       const data = await response.json();
 
       setExplanations((prev) => [
@@ -292,9 +300,9 @@ const MindMap = () => {
   const handleDeleteMindmap = async (topicToDelete) => {
     try {
       await fetch(
-        `http://localhost:5000/api/delete-mindmap/${account}/${encodeURIComponent(
-          topicToDelete
-        )}`,
+        `${
+          import.meta.process.env.VITE_SERVER_URI
+        }/api/delete-mindmap/${account}/${encodeURIComponent(topicToDelete)}`,
         {
           method: "DELETE",
         }

@@ -24,11 +24,14 @@ const UserRegistration = ({ walletAddress, onRegistrationComplete }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/user/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ walletAddress, username }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URI}/api/user/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ walletAddress, username }),
+        }
+      );
 
       const data = await response.json();
 

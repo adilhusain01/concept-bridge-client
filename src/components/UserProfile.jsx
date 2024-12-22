@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  User,
-  Calendar,
-  Activity,
-  Clock,
-  Wallet,
-  Book,
-  Award,
-} from "lucide-react";
+import { User, Activity, Clock, Wallet } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useWallet } from "../contexts/WalletContext";
 import UserRegistration from "./UserRegistration";
-import { Loader2 } from "lucide-react";
+import Loader from "./Loader";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -138,6 +130,14 @@ const UserProfile = () => {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8 flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
   if (!account || !isCorrectNetwork) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8 flex items-center justify-center">
@@ -146,14 +146,6 @@ const UserProfile = () => {
             Please connect your wallet and switch to the correct network.
           </p>
         </Card>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
   }

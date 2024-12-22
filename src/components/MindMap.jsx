@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import ExplanationCard from "./ExplanationCard";
 import { useWallet } from "../contexts/WalletContext";
 import UserRegistration from "./UserRegistration";
+import Loader from "./Loader";
 
 const MindMap = () => {
   const [topic, setTopic] = useState("");
@@ -313,6 +314,14 @@ const MindMap = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+        <Loader />
+      </div>
+    );
+  }
+
   if (!account || !isCorrectNetwork) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8 flex items-center justify-center">
@@ -321,14 +330,6 @@ const MindMap = () => {
             Please connect your wallet and switch to the correct network.
           </p>
         </Card>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
   }

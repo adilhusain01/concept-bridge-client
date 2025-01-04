@@ -6,11 +6,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract EDUToken is ERC20, Ownable {
     constructor(uint256 initialSupply) ERC20("Education Token", "EDU") Ownable(msg.sender) {
-        _mint(msg.sender, initialSupply * 10**18);
+        _mint(msg.sender, initialSupply * 10**decimals());
     }
 
-    function distributeReward(address to) external {
-        require(msg.sender == owner(), "Only owner can distribute rewards");
-        _transfer(address(this), to, 1); // 1 wei (smallest unit of EDU token)
+    function distributeReward(address to) external onlyOwner {
+        // Transfer from owner's balance instead of contract's balance
+        _transfer(owner(), to, 1);
     }
 }

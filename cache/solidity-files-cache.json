@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/adil/Desktop/ConceptBridge/client/contracts/EDUToken.sol": {
-      "lastModificationDate": 1734865081555,
-      "contentHash": "5d0549bcbc9fb23fcba6e4bcc4bfe5e4",
+      "lastModificationDate": 1736011804691,
+      "contentHash": "f73fb3cddb4bb0b0cc40077abf1b2402",
       "sourceName": "contracts/EDUToken.sol",
       "solcConfig": {
         "version": "0.8.27",

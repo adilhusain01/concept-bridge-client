@@ -6,11 +6,13 @@ async function main() {
     const EDUToken = await hre.ethers.getContractFactory("EDUToken");
 
     // Define the initial supply
-    const initialSupply = hre.ethers.utils.parseUnits("0.02", 18); // Example: 1000 tokens
+    // const initialSupply = hre.ethers.utils.parseUnits("0.02", 18); // Example: 1000 tokens
 
     // Deploy the contract with the initial supply
     console.log("Deploying EDUToken contract...");
-    const eDUToken = await EDUToken.deploy(initialSupply);
+    const eDUToken = await EDUToken.deploy(
+      "0x36fD41533d1c86225BDA5FB4E0bC0a8CD22D3180"
+    );
 
     // Wait for deployment to finish
     await eDUToken.deployed();

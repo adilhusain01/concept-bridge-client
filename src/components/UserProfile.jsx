@@ -343,7 +343,7 @@ const UserProfile = () => {
                       ? ` - Next reward available on ${new Date(
                           streakStatus.nextEligibleDate
                         ).toLocaleDateString()}`
-                      : " - Complete 5 days of activity to earn EDU tokens!"}
+                      : " - Complete 5 days of activity to earn A8T tokens!"}
                   </p>
                 </div>
                 <Button

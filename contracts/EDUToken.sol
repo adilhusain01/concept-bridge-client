@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract EDUToken is ERC20, Ownable {
-    constructor(uint256 initialSupply) ERC20("Education Token", "EDU") Ownable(msg.sender) {
+    constructor(uint256 initialSupply) ERC20("Ancient8 Token", "A8T") Ownable(msg.sender) {
         _mint(msg.sender, initialSupply * 10**decimals());
     }
 

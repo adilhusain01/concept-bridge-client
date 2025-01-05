@@ -5,31 +5,31 @@ import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../utils/contractHelpers";
 
 const ContractContext = createContext();
 
-const EDU_TOKEN_ABI = CONTRACT_ABI;
+const ANCIENT8_TOKEN_ABI = CONTRACT_ABI;
 
-const EDU_TOKEN_ADDRESS = CONTRACT_ADDRESS;
+const ANCIENT8_TOKEN_ADDRESS = CONTRACT_ADDRESS;
 
 export const ContractProvider = ({ children }) => {
   const { signer, account } = useWallet();
-  const [eduContract, setEduContract] = useState(null);
+  const [ancient8Contract, setAncient8Contract] = useState(null);
   const [balance, setBalance] = useState("0");
 
   useEffect(() => {
-    if (signer && EDU_TOKEN_ADDRESS) {
+    if (signer && ANCIENT8_TOKEN_ADDRESS) {
       const contract = new ethers.Contract(
-        EDU_TOKEN_ADDRESS,
-        EDU_TOKEN_ABI,
+        ANCIENT8_TOKEN_ADDRESS,
+        ANCIENT8_TOKEN_ABI,
         signer
       );
-      setEduContract(contract);
+      setAncient8Contract(contract);
     }
   }, [signer]);
 
   useEffect(() => {
     const updateBalance = async () => {
-      if (eduContract && account) {
+      if (ancient8Contract && account) {
         try {
-          const balance = await eduContract.balanceOf(account);
+          const balance = await ancient8Contract.balanceOf(account);
           setBalance(ethers.utils.formatEther(balance));
         } catch (error) {
           console.error("Error fetching balance:", error);
@@ -39,8 +39,8 @@ export const ContractProvider = ({ children }) => {
 
     updateBalance();
     // Set up event listener for transfers
-    if (eduContract) {
-      eduContract.on("Transfer", (from, to, value) => {
+    if (ancient8Contract) {
+      ancient8Contract.on("Transfer", (from, to, value) => {
         if (to.toLowerCase() === account?.toLowerCase()) {
           updateBalance();
         }
@@ -48,18 +48,18 @@ export const ContractProvider = ({ children }) => {
     }
 
     return () => {
-      if (eduContract) {
-        eduContract.removeAllListeners("Transfer");
+      if (ancient8Contract) {
+        ancient8Contract.removeAllListeners("Transfer");
       }
     };
-  }, [eduContract, account]);
+  }, [ancient8Contract, account]);
 
   const claimReward = async () => {
-    if (!eduContract || !account)
+    if (!ancient8Contract || !account)
       throw new Error("Contract or account not initialized");
 
     try {
-      const tx = await eduContract.distributeReward(account);
+      const tx = await ancient8Contract.distributeReward(account);
       await tx.wait();
       return tx.hash;
     } catch (error) {
@@ -68,7 +68,9 @@ export const ContractProvider = ({ children }) => {
   };
 
   return (
-    <ContractContext.Provider value={{ eduContract, balance, claimReward }}>
+    <ContractContext.Provider
+      value={{ ancient8Contract, balance, claimReward }}
+    >
       {children}
     </ContractContext.Provider>
   );

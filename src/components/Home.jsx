@@ -14,12 +14,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import one from "../assets/1.jpg";
 import two from "../assets/2.jpg";
 import three from "../assets/3.jpg";
+import bg from "../assets/bg.png";
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-[14rem]">
+      <div className="container mx-auto px-4 py-[3.5rem]">
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="flex-1 space-y-8">
             <h1 className="text-6xl font-bold text-gray-800 leading-tight">
@@ -81,26 +82,7 @@ const Home = () => {
             </div>
           </div>
           <div className="flex-1 relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl opacity-10 blur-xl"></div>
-            <Card className="relative bg-white/90 backdrop-blur-xl border-white/30 shadow-2xl rounded-3xl overflow-hidden">
-              <CardContent className="p-6">
-                <Link
-                  to="https://www.youtube.com/watch?v=kXfbsfRVgq8&list=RDkXfbsfRVgq8&start_radio=1"
-                  target="_blank"
-                >
-                  <iframe
-                    width="100%"
-                    height="315"
-                    src="https://www.youtube.com/embed/kXfbsfRVgq8"
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="rounded-lg"
-                  ></iframe>
-                </Link>
-              </CardContent>
-            </Card>
+            <img src={bg} className="rounded-lg object-cover h-[80%]" />
           </div>
         </div>
       </div>
